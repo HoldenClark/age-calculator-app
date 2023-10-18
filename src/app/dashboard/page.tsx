@@ -76,10 +76,10 @@ export default function Dashboard({
   }, []);
 
   return (
-    <div className="grid place-items-center min-h-screen">
-      <Card className="bg-black">
-        <CardBody>
-            <p>
+    <div className="grid grid-cols-1 place-items-center min-h-screen bg-blue-950">
+      <Card className="w-[440px] grid grid-cols-1 place-items-center h-[430px] bg-gradient-radial from-blue-700 to-blue-950 to-70%">
+        <CardBody className="mr-[33px] w-[200px] md:w-[350px]">
+            <p className="text-blue-300 font-black text-3xl md:text-5xl">
              {final.toFixed(10)}
             </p>
         </CardBody>
