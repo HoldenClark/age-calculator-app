@@ -17,7 +17,9 @@ export default function Dashboard({
 {
   const [final, setFinal] = useState<number>(0);
 
-  function calculate() {
+  useEffect(() => {
+  let animationFrameId: number;
+  const calculate = () => {
     const date = new Date();
     
     // Retrieving components of the date
@@ -63,15 +65,14 @@ export default function Dashboard({
     const final = Year + newMonth + newDay + newHour + newMinute + newSecond + newMilli;
 
     //console.log("Final value: ", final);
-    return final;
-  }
+    setFinal(final);
 
-  useEffect(() => {
-  const interval = setInterval(() => {
-    setFinal((final) => calculate());
-  }, 40);
+    animationFrameId = requestAnimationFrame(calculate);
+  };
 
-  return () => clearInterval(interval);
+  animationFrameId = requestAnimationFrame(calculate);
+
+  return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
   return (
