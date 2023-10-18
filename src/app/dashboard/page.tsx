@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect} from "react"
+import React, {useState, useEffect} from "react"
 import Image from 'next/image'
 import {Card, CardBody} from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
@@ -13,7 +13,10 @@ export default function Dashboard({
     date : string;
     time : string;
   };
-}) {
+}) 
+{
+  const [final, setFinal] = useState<number>(0);
+
   function calculate() {
     const date = new Date();
     
@@ -23,6 +26,10 @@ export default function Dashboard({
     const startDay = date.getDate(); // Returns the day of the month (1-31)
     const startHour = date.getHours(); // Returns the hour (0-23)
     const startMinute = date.getMinutes(); // Returns the minutes (0-59)
+    const startSeconds = date.getSeconds();
+    const startMilliseconds = date.getMilliseconds();
+
+    //console.log("Start Date:", startYear, startMonth, startDay, startHour, startMinute);
   
     const endDate = searchParams.date.split("-");
     const endTime = searchParams.time.split(":");
@@ -34,29 +41,45 @@ export default function Dashboard({
     const endHour = parseInt(endTime[0]);
     const endMinute = parseInt(endTime[1]);
 
+    //console.log("End Date:", endYear, endMonth, endDay, endHour, endMinute);
+
     const Year = startYear - endYear ;
     const Month = startMonth - endMonth;
     const Day = startDay - endDay;
     const Hour = startHour - endHour;
     const Minute = startMinute - endMinute;
 
-    const newMinute = Minute / 60 / 24 / 30.4375 / 365.2421875;
-    const newHour = Hour / 24 / 30.4375 / 365.2421875;
-    const newDay = Day / 30.4375 / 365.2421875;
-    const newMonth = Month / 365.2421875;
+    console.log("Differences:", Year, Month, Day, Hour, Minute, startSeconds , startMilliseconds);
 
-    const final = Year + newMonth + newDay + newHour + newMinute;
+    const newMilli = startMilliseconds / 1000 / 60 / 60 / 24 / 365.2421875;
+    const newSecond = startSeconds / 60 / 60 / 24 / 365.2421875;
+    const newMinute = Minute / 60 / 24 / 365.2421875;
+    const newHour = Hour / 24 / 365.2421875;
+    const newDay = Day / 365.2421875;
+    const newMonth = Month / 12;
 
-    console.log("Final value: ", final);
+    //console.log("Calculated Years:", newMinute, newHour, newDay, newMonth);
+
+    const final = Year + newMonth + newDay + newHour + newMinute + newSecond + newMilli;
+
+    //console.log("Final value: ", final);
     return final;
   }
-  const final = calculate()
+
+  useEffect(() => {
+  const interval = setInterval(() => {
+    setFinal((final) => calculate());
+  }, 40);
+
+  return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="grid place-items-center min-h-screen">
       <Card className="bg-black">
         <CardBody>
             <p>
-             {final}
+             {final.toFixed(10)}
             </p>
         </CardBody>
       </Card>
