@@ -73,7 +73,7 @@ export default function Dashboard({
   animationFrameId = requestAnimationFrame(calculate);
 
   return () => cancelAnimationFrame(animationFrameId);
-  }, [searchParams]);
+  }, [searchParams.date, searchParams.time]);
 
   return (
     <div className="grid grid-cols-1 place-items-center min-h-screen bg-blue-950">
